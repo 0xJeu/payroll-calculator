@@ -3,8 +3,7 @@ package com.plurasight;
 public class Employee {
     private int employeeID;
     private String name;
-    double hoursWorked;
-    double payRate;
+    private double hoursWorked, payRate;
 
 
     public Employee(int employeeID, String name, double hoursWorked, double payRate) {
@@ -16,7 +15,7 @@ public class Employee {
 
 
    public double getGrossPay(){
-       return getHoursWorked() * getPayRate();
+       return this.hoursWorked * this.payRate;
    }
 
     //Getters

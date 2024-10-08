@@ -1,26 +1,38 @@
 package com.plurasight;
 
 import java.io.*;
-import java.lang.reflect.Parameter;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class App {
     public static void main(String[] args) {
 
         try {
-            //Load CSV
-            FileReader fileReader = new FileReader("src/main/resources/employees.csv");
+            Scanner keyboard = new Scanner(System.in);
+
+            //Get user input
+            System.out.print("Enter the name of the file employee file to process: ");
+            String readFileName = keyboard.nextLine();
+
+            System.out.print("Enter the name of the file employee file to process: ");
+            String writeFileName = keyboard.nextLine();
+
+            //Read CSV
+            FileReader fileReader = new FileReader("src/main/resources/" + readFileName);
             BufferedReader bufReader = new BufferedReader(fileReader);
+
+            //Write new CSV
+            FileWriter fileWriter = new FileWriter("src/main/resources/" + writeFileName);
+            BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             //Set variables
             String input;
-            int count = 1;
             int employeeID;
             String name;
             double hoursWorked;
             double payRate;
 
-            //Using a while loop will allow for each line in the CSV to be read and used
+            //Using a while loop will allow for each line in the CSV to be read and used for writing the new file
             while ((input = bufReader.readLine()) != null){
                 String [] splitData = input.split(Pattern.quote("|"));
                 employeeID = Integer.parseInt(splitData[0]);
@@ -31,24 +43,21 @@ public class App {
                 // Create a new object using the Employee Class
                 Employee employee = new Employee(employeeID, name, hoursWorked, payRate);
 
-                //Print results with desired formatting
-                System.out.printf("""
-                        Employee #%d:
-                        Id: %s
-                        Name: %s
-                        Gross Pay: %.2f\s
-                        \n""",count, employee.getEmployeeID(), employee.getName(), employee.getGrossPay());
-                count++;
+                //Write content to new file
+                String text = String.format("%d|%s|%.2f \n", employee.getEmployeeID(),employee.getName(),employee.getGrossPay());
+                bufWriter.write(text);
+
             }
 
+            System.out.println("Completed.");
 
             // Release file
             bufReader.close();
+            bufWriter.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 }
